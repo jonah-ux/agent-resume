@@ -26,6 +26,18 @@ agent-resume create --out resume.json
 agent-resume validate resume.json
 ```
 
+## See it work
+
+Validation fails closed when the continuation record is missing its identity fields; a valid record is easy to hand to the next agent:
+
+```json
+{"schema":"agent-resume/validation/v1","ok":true,"reason":"valid"}
+```
+
+## Related tools
+
+Use [Agent Proof](https://github.com/jonah-ux/agent-proof) to attach evidence, [Chatlens](https://github.com/jonah-ux/chatlens) to recover the missing conversation, and [Worktree Conservator](https://github.com/jonah-ux/worktree-conservator) to keep the repository state recoverable.
+
 Validation requires a goal, repository identity, and commit so a handoff cannot quietly lose
 which source state it describes. The record uses the `agent-resume/v1` schema.
 
