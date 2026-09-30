@@ -1,22 +1,33 @@
-# Portable Agent Continuation Records
+# Agent Resume
 
 ![portable agent continuation records workflow](docs/header.svg)
 
 **Make unfinished agent work safe to inspect and continue.**
 
-## Install
+[![CI](https://github.com/jonah-ux/agent-resume/actions/workflows/ci.yml/badge.svg)](https://github.com/jonah-ux/agent-resume/actions/workflows/ci.yml)
+[![Python](https://img.shields.io/badge/python-3.11%2B-3776ab)](https://www.python.org/)
+[![License](https://img.shields.io/badge/license-MIT-22c55e)](LICENSE)
+
+Agent Resume stores the small set of facts a new agent needs to continue work: the goal,
+repository, branch, commit, completed steps, pending steps, evidence, and unknowns. It keeps
+continuation portable without pretending that a stale note is live runtime state.
+
+## Try it in 30 seconds
 
 ```bash
-pip install git+https://github.com/jonah-ux/agent-resume.git@main
+python -m pip install git+https://github.com/jonah-ux/agent-resume.git@main
+python demos/demo.py
 ```
 
-## Quick start
+Create and validate a continuation record:
 
 ```bash
-agent-resume --help
+agent-resume create --out resume.json
+agent-resume validate resume.json
 ```
 
-The first release is intentionally small, offline-friendly, and easy to inspect. JSON output is designed for agents; diagnostics stay explicit.
+Validation requires a goal, repository identity, and commit so a handoff cannot quietly lose
+which source state it describes. The record uses the `agent-resume/v1` schema.
 
 ## Development
 
@@ -26,8 +37,7 @@ python -m build --sdist --wheel
 python demos/demo.py
 ```
 
-## Limits
+A resume file is a handoff aid. Re-check the repository and runtime before claiming the work is
+complete.
 
-Read the command help and [release guide](docs/releasing.md) before using this in automation. This project does not claim permissions, isolation, verification, or provider behavior beyond the output fields it can prove.
-
-MIT licensed. Contributions and sanitized bug reports are welcome.
+MIT licensed.
