@@ -9,8 +9,9 @@
 [![License](https://img.shields.io/badge/license-MIT-22c55e)](LICENSE)
 
 Agent Resume stores the small set of facts a new agent needs to continue work: the goal,
-repository, branch, commit, completed steps, pending steps, evidence, and unknowns. It keeps
-continuation portable without pretending that a stale note is live runtime state.
+repository, branch, commit, completed steps, pending steps, evidence, and unknowns. It binds
+those fields to a canonical SHA-256 fingerprint and can compare two records without printing
+their evidence contents.
 
 ## Try it in 30 seconds
 
@@ -23,15 +24,18 @@ Create and validate a continuation record:
 
 ```bash
 agent-resume create --out resume.json
-agent-resume validate resume.json
+agent-resume validate resume.json --require-fingerprint
+agent-resume inspect resume.json --require-fingerprint
+agent-resume diff resume.json --against previous-resume.json --require-fingerprint
 ```
 
 ## See it work
 
-Validation fails closed when the continuation record is missing its identity fields; a valid record is easy to hand to the next agent:
+Validation fails closed when identity or integrity is missing. `diff` reports only changed field
+names and SHA-256 digests, so a reviewer can compare handoffs without copying the evidence text:
 
 ```json
-{"schema":"agent-resume/validation/v1","ok":true,"reason":"valid"}
+{"schema":"agent-resume/validation/v1","ok":true,"integrity":"verified","fingerprint":"..."}
 ```
 
 ## Related tools
@@ -39,7 +43,8 @@ Validation fails closed when the continuation record is missing its identity fie
 Use [Agent Proof](https://github.com/jonah-ux/agent-proof) to attach evidence, [Chatlens](https://github.com/jonah-ux/chatlens) to recover the missing conversation, and [Worktree Conservator](https://github.com/jonah-ux/worktree-conservator) to keep the repository state recoverable.
 
 Validation requires a goal, repository identity, and commit so a handoff cannot quietly lose
-which source state it describes. The record uses the `agent-resume/v1` schema.
+which source state it describes. The record uses the `agent-resume/v1` schema; `diff` uses
+`agent-resume/diff/v1` and is exit 1 when two valid records differ.
 
 ## Development
 
