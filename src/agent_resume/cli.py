@@ -13,6 +13,7 @@ SCHEMA = "agent-resume/v1"
 LIST_FIELDS = ("completed", "pending", "evidence", "unknowns")
 IDENTITY_FIELDS = ("goal", "repository", "branch", "commit")
 PAYLOAD_FIELDS = ("schema", *IDENTITY_FIELDS, *LIST_FIELDS)
+ALLOWED_FIELDS = frozenset((*PAYLOAD_FIELDS, "fingerprint"))
 
 
 def _canonical(value: Any) -> str:
@@ -56,16 +57,23 @@ def _validate_record(record: dict[str, Any], *, require_fingerprint: bool = Fals
     errors: list[str] = []
     if record.get("schema") != SCHEMA:
         errors.append(f"schema must be {SCHEMA}")
+    unknown_fields = sorted(set(record) - ALLOWED_FIELDS)
+    if unknown_fields:
+        errors.append("unsupported fields: " + ", ".join(unknown_fields))
     for field in IDENTITY_FIELDS:
         if not isinstance(record.get(field), str) or not record[field].strip():
             errors.append(f"{field} is required")
     for field in LIST_FIELDS:
         if not isinstance(record.get(field), list):
             errors.append(f"{field} must be an array")
+        elif any(not isinstance(item, str) for item in record[field]):
+            errors.append(f"{field} must contain only strings")
 
     expected = _fingerprint(record) if not errors else None
     actual = record.get("fingerprint")
-    if actual is None:
+    if errors:
+        integrity = "invalid"
+    elif actual is None:
         integrity = "unbound"
         if require_fingerprint:
             errors.append("fingerprint is required")

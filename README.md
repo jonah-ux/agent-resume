@@ -60,6 +60,10 @@ Validation requires a goal, repository identity, and commit so a handoff cannot 
 which source state it describes. The record uses the `agent-resume/v1` schema; `diff` uses
 `agent-resume/diff/v1` and is exit 1 when two valid records differ.
 
+Validation also rejects unsupported top-level fields and non-string list members. A record with
+malformed shape is reported with `integrity: "invalid"` and cannot be treated as a verified
+fingerprinted handoff.
+
 ## Development
 
 ```bash
