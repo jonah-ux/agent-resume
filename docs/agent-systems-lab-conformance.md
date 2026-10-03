@@ -11,5 +11,5 @@ records Agent Proof's existing
 `agent-proof/interop/v1` adapter as the downstream handoff owner; it does not
 create a second registry or copy evidence text.
 
-Run `python -m unittest discover -s tests` or the focused conformance test from
+Run `python3 -m unittest discover -s tests` or the focused conformance test from
 a fresh checkout. All data is synthetic and local.
