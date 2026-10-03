@@ -34,6 +34,11 @@
     .change { display: flex; justify-content: space-between; gap: 14px; padding: 13px 15px; border: 1px solid var(--line); border-radius: 13px; background: #1a120baa; }
     .change span { color: var(--muted); }
     .change strong { color: var(--good); font: .85rem ui-monospace, SFMono-Regular, Menlo, monospace; }
+    .control-row { display: flex; flex-wrap: wrap; align-items: end; gap: 12px; margin: 18px 0 2px; }
+    label { display: grid; gap: 5px; color: var(--muted); font-size: .82rem; }
+    select, button.validate { border: 1px solid var(--line); border-radius: 9px; padding: 9px 11px; background: #171007; color: var(--ink); font: .84rem ui-monospace, SFMono-Regular, Menlo, monospace; }
+    button.validate { border-color: #9df2b766; color: var(--good); cursor: pointer; }
+    button.validate:hover, button.validate:focus-visible, select:focus-visible { border-color: var(--good); outline: 2px solid #9df2b755; outline-offset: 2px; }
     .command { position: relative; margin-top: 16px; padding: 16px 72px 16px 18px; border: 1px solid var(--line); border-radius: 14px; background: #0e0a05; color: #fff0c0; font: .86rem/1.6 ui-monospace, SFMono-Regular, Menlo, monospace; overflow-wrap: anywhere; }
     button.copy { position: absolute; top: 10px; right: 10px; border: 1px solid #fcd34d66; border-radius: 8px; padding: 7px 9px; background: #463518; color: var(--accent); cursor: pointer; font: .75rem ui-monospace, SFMono-Regular, Menlo, monospace; }
     button.copy:hover, button.copy:focus-visible { border-color: var(--accent); outline: 2px solid #fcd34d55; outline-offset: 2px; }
@@ -69,7 +74,8 @@
         <div class="record"><dt>source state</dt><dd><code>main @ 4d2f…a81c</code></dd></div>
         <div class="record"><dt>unknowns</dt><dd>Release reviewer still needs to read the CI artifact.</dd></div>
       </dl>
-      <div class="diff" aria-label="Illustrative changed fields"><div class="change"><span>pending_steps</span><strong>changed · 1 field</strong></div><div class="change"><span>evidence</span><strong>digest matched</strong></div><div class="change"><span>repository / commit</span><strong>unchanged</strong></div></div>
+      <div class="diff" aria-label="Illustrative changed fields"><div class="change" data-field="pending"><span>pending_steps</span><strong>changed · 1 field</strong></div><div class="change" data-field="evidence"><span>evidence</span><strong>digest matched</strong></div><div class="change" data-field="identity"><span>repository / commit</span><strong>unchanged</strong></div></div>
+      <div class="control-row"><label for="identity-mode">Illustrative identity check<select id="identity-mode"><option value="same">same source identity</option><option value="changed">changed source identity</option></select></label><button class="validate" id="preview-diff" type="button">preview continuation</button><span id="resume-status" class="stamp" role="status" aria-live="polite">Integrity verified; safe to continue.</span></div>
       <details><summary>What does this page prove?</summary><p>Only that the handoff shape is easy to scan. These fields and digests are illustrative browser data; the page does not inspect a repository or validate a real resume file.</p></details>
     </section>
 
@@ -79,10 +85,19 @@
       <div class="command"><code>agent-resume validate resume.json --require-fingerprint</code><button class="copy" type="button" data-copy="agent-resume validate resume.json --require-fingerprint">copy</button></div>
       <div class="command"><code>agent-resume diff resume.json --against previous-resume.json --require-fingerprint</code><button class="copy" type="button" data-copy="agent-resume diff resume.json --against previous-resume.json --require-fingerprint">copy</button></div>
       <p id="copy-status" role="status" aria-live="polite"></p>
-      <div class="foot"><span>Source of truth: the emitted <code>agent-resume/validation/v1</code> and <code>agent-resume/diff/v1</code> documents.</span><a href="../README.md">Back to README</a></div>
+      <div class="foot"><span>Source of truth: the emitted <code>agent-resume/validation/v1</code> and <code>agent-resume/diff/v1</code> documents.</span><a href="https://github.com/jonah-ux/agent-resume#readme">Back to README</a></div>
     </section>
   </main>
   <script>
+    document.getElementById('preview-diff').addEventListener('click', () => {
+      const changed = document.getElementById('identity-mode').value === 'changed';
+      const identity = document.querySelector('[data-field="identity"] strong');
+      const pending = document.querySelector('[data-field="pending"] strong');
+      identity.textContent = changed ? 'mismatch · pause' : 'unchanged';
+      identity.style.color = changed ? 'var(--danger)' : 'var(--good)';
+      pending.textContent = changed ? 'blocked · re-read source' : 'changed · 1 field';
+      document.getElementById('resume-status').textContent = changed ? 'Identity mismatch; stop and re-check the repository.' : 'Integrity verified; safe to continue.';
+    });
     document.querySelectorAll('[data-copy]').forEach((button) => button.addEventListener('click', async () => {
       const status = document.getElementById('copy-status');
       try { await navigator.clipboard.writeText(button.dataset.copy); button.textContent = 'copied'; status.textContent = 'Command copied. The handoff map is ready for the next traveler.'; }

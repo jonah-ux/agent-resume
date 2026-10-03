@@ -16,14 +16,17 @@ their evidence contents.
 ## Try it in 30 seconds
 
 ```bash
-python -m pip install git+https://github.com/jonah-ux/agent-resume.git@main
+git clone --depth 1 https://github.com/jonah-ux/agent-resume.git
+cd agent-resume
+python -m pip install .
 python demos/demo.py
 ```
 
 Create and validate a continuation record:
 
 ```bash
-agent-resume create --out resume.json
+agent-resume create --out previous-resume.json --goal "ship demo" --repository . --branch main --commit "$(git rev-parse HEAD)"
+agent-resume create --out resume.json --goal "ship demo" --repository . --branch main --commit "$(git rev-parse HEAD)"
 agent-resume validate resume.json --require-fingerprint
 agent-resume inspect resume.json --require-fingerprint
 agent-resume diff resume.json --against previous-resume.json --require-fingerprint
@@ -55,7 +58,6 @@ which source state it describes. The record uses the `agent-resume/v1` schema; `
 ```bash
 python -m unittest discover -s tests
 python -m build --sdist --wheel
-python demos/demo.py
 ```
 
 A resume file is a handoff aid. Re-check the repository and runtime before claiming the work is
