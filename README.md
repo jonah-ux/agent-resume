@@ -15,15 +15,23 @@ their evidence contents.
 
 ## Try it in 30 seconds
 
+This repository works on its own. Its fixtures, CLI, and demo require no other Jonah-UX repository.
+Companion links below are optional ideas for connecting outputs after the default workflow works.
+
 ```bash
-python -m pip install git+https://github.com/jonah-ux/agent-resume.git@main
-python demos/demo.py
+git clone --depth 1 https://github.com/jonah-ux/agent-resume.git
+cd agent-resume
+python3 -m venv .venv
+. .venv/bin/activate
+python3 -m pip install .
+python3 demos/demo.py
 ```
 
 Create and validate a continuation record:
 
 ```bash
-agent-resume create --out resume.json
+agent-resume create --out previous-resume.json --goal "ship demo" --repository . --branch main --commit "$(git rev-parse HEAD)"
+agent-resume create --out resume.json --goal "ship demo" --repository . --branch main --commit "$(git rev-parse HEAD)"
 agent-resume validate resume.json --require-fingerprint
 agent-resume inspect resume.json --require-fingerprint
 agent-resume diff resume.json --against previous-resume.json --require-fingerprint
@@ -38,6 +46,10 @@ names and SHA-256 digests, so a reviewer can compare handoffs without copying th
 {"schema":"agent-resume/validation/v1","ok":true,"integrity":"verified","fingerprint":"..."}
 ```
 
+Open the [continuation and diff walkthrough](docs/walkthrough.html) for a visual tour of the
+handoff fields, validation gate, and changed-field readback. The browser board is illustrative;
+it does not invoke `agent-resume` or inspect a repository.
+
 ## Related tools
 
 Use [Agent Proof](https://github.com/jonah-ux/agent-proof) to attach evidence, [Chatlens](https://github.com/jonah-ux/chatlens) to recover the missing conversation, and [Worktree Conservator](https://github.com/jonah-ux/worktree-conservator) to keep the repository state recoverable.
@@ -51,7 +63,6 @@ which source state it describes. The record uses the `agent-resume/v1` schema; `
 ```bash
 python -m unittest discover -s tests
 python -m build --sdist --wheel
-python demos/demo.py
 ```
 
 A resume file is a handoff aid. Re-check the repository and runtime before claiming the work is
