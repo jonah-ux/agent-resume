@@ -38,6 +38,10 @@ names and SHA-256 digests, so a reviewer can compare handoffs without copying th
 {"schema":"agent-resume/validation/v1","ok":true,"integrity":"verified","fingerprint":"..."}
 ```
 
+Open the [continuation and diff walkthrough](docs/walkthrough.html) for a visual tour of the
+handoff fields, validation gate, and changed-field readback. The browser board is illustrative;
+it does not invoke `agent-resume` or inspect a repository.
+
 ## Related tools
 
 Use [Agent Proof](https://github.com/jonah-ux/agent-proof) to attach evidence, [Chatlens](https://github.com/jonah-ux/chatlens) to recover the missing conversation, and [Worktree Conservator](https://github.com/jonah-ux/worktree-conservator) to keep the repository state recoverable.
