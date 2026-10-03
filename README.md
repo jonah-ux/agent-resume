@@ -74,4 +74,11 @@ python -m build --sdist --wheel
 A resume file is a handoff aid. Re-check the repository and runtime before claiming the work is
 complete.
 
+## Public surface audit
+
+Run `python scripts/audit_public_surface.py --json` from a clean checkout. The receipt checks
+dependency and license declarations, release-workflow provenance markers, and high-signal secret
+patterns across tracked text files. Pass `--dist-dir dist` to compare wheel and sdist bytes with
+`SHA256SUMS`; missing artifacts remain `unavailable`.
+
 MIT licensed.
