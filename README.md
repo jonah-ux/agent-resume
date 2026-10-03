@@ -15,11 +15,16 @@ their evidence contents.
 
 ## Try it in 30 seconds
 
+This repository works on its own. Its fixtures, CLI, and demo require no other Jonah-UX repository.
+Companion links below are optional ideas for connecting outputs after the default workflow works.
+
 ```bash
 git clone --depth 1 https://github.com/jonah-ux/agent-resume.git
 cd agent-resume
-python -m pip install .
-python demos/demo.py
+python3 -m venv .venv
+. .venv/bin/activate
+python3 -m pip install .
+python3 demos/demo.py
 ```
 
 Create and validate a continuation record:
