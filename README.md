@@ -39,8 +39,10 @@ agent-resume diff resume.json --against previous-resume.json --require-fingerpri
 
 ## See it work
 
-Validation fails closed when identity or integrity is missing. `diff` reports only changed field
-names and SHA-256 digests, so a reviewer can compare handoffs without copying the evidence text:
+Validation fails closed when identity or integrity is missing. The `diff` envelope includes the
+current and baseline input paths and whole-record fingerprints. Each `changed[]` entry contains
+only the changed field name and baseline/current SHA-256 digests, so a reviewer can compare
+handoffs without copying the evidence text:
 
 ```json
 {"schema":"agent-resume/validation/v1","ok":true,"integrity":"verified","fingerprint":"..."}

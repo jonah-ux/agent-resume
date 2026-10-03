@@ -16,7 +16,7 @@
   ],
   "privacy": {
     "evidence_content_exported": false,
-    "diff_exports": "field_names_and_sha256_only",
+    "diff_exports": "input_paths_and_record_fingerprints_plus_changed_field_digests",
     "identity_required": ["goal", "repository", "branch", "commit"]
   }
 }
