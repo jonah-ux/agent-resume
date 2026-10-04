@@ -39,7 +39,9 @@ agent-resume diff resume.json --against previous-resume.json --require-fingerpri
 
 ## See it work
 
-Validation fails closed when identity or integrity is missing. The `diff` envelope includes the
+Validation rejects missing identity. With `--require-fingerprint`, it also rejects a missing or
+mismatched fingerprint; without that flag, an unfingerprinted record is reported as `unbound`.
+The `diff` envelope includes the
 current and baseline input paths and whole-record fingerprints. Each `changed[]` entry contains
 only the changed field name and baseline/current SHA-256 digests, so a reviewer can compare
 handoffs without copying the evidence text:
